@@ -73,6 +73,13 @@ const transformedCode = babel.transform(code, {
 }).code;
 ```
 
+this will transform the code to:
+
+```js
+function MyComponent() {
+  throw new Error("Infinite recursion detected. <MyComponent /> component renders itself.");
+}
+```
 
 ## Contributors
 
