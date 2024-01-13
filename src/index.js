@@ -1,7 +1,7 @@
-const reactRecursionProtectPlugin = ({types: t}) => {
+const recursionProtect = ({types: t}) => {
     let parentFunctionNames = [];
 
-    const traverseParentFunctions = (path) => {
+    const fulfillParentFunctionNames = (path) => {
         parentFunctionNames = [];
 
         let currentPath = path;
@@ -16,25 +16,35 @@ const reactRecursionProtectPlugin = ({types: t}) => {
     const visitor = {
         CallExpression(path) {
             const {callee, arguments: args} = path.node;
-            traverseParentFunctions(path);
+
             // Check if the function is calling React.createElement
-            if (parentFunctionNames.includes(args[0].name)) {
-                console.warn(
-                    `Infinite recursion detected in functions [${parentFunctionNames.join(
-                        ', ',
-                    )}]:`,
-                    path.toString(),
-                );
-                // Replace the statement with a throw statement
-                path.replaceWith(
-                    t.throwStatement(
-                        t.newExpression(t.identifier('Error'), [
-                            t.stringLiteral(
-                                `Infinite recursion detected. <${args[0].name} /> component renders itself.`,
-                            ),
-                        ]),
-                    ),
-                );
+            if (
+                t.isMemberExpression(callee) &&
+                t.isIdentifier(callee.object, {name: 'React'}) &&
+                t.isIdentifier(callee.property, {name: 'createElement'}) &&
+                args.length >= 1 &&
+                t.isIdentifier(args[0])
+            ) {
+                fulfillParentFunctionNames(path);
+
+                if (parentFunctionNames.includes(args[0].name)) {
+                    console.warn(
+                        `Infinite recursion detected in functions [${parentFunctionNames.join(
+                            ', ',
+                        )}]:`,
+                        path.toString(),
+                    );
+                    // Replace the statement with a throw statement
+                    path.replaceWith(
+                        t.throwStatement(
+                            t.newExpression(t.identifier('Error'), [
+                                t.stringLiteral(
+                                    `Infinite recursion detected. <${args[0].name} /> component renders itself.`,
+                                ),
+                            ]),
+                        ),
+                    );
+                }
             }
         },
     };
@@ -44,4 +54,4 @@ const reactRecursionProtectPlugin = ({types: t}) => {
     };
 };
 
-export default reactRecursionProtectPlugin;
+export default recursionProtect;
