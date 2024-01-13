@@ -1,0 +1,37 @@
+{
+  "name": "react-recursion-protect-plugin",
+  "version": "1.0.0",
+  "description": "A babel plugin to detect recursion in react components",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel src -d lib",
+    "prepublishOnly": "npm run build"
+  },
+  "babel" : {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ykansu/react-recursion-detection-babel-plugin.git"
+  },
+  "keywords": [
+    "babel",
+    "plugin",
+    "react",
+    "recursion",
+    "detect"
+  ],
+  "author": "Yasin Kansu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ykansu/react-recursion-detection-babel-plugin/issues"
+  },
+  "homepage": "https://github.com/ykansu/react-recursion-detection-babel-plugin#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8"
+  }
+}
