@@ -56,7 +56,7 @@ To use the plugin in your Babel configuration, add it to the plugins array:
 }
 ```
 
-For sandbox environments, you can use the plugin with babel-standalone:
+For sandbox environments, you can use the plugin with babel-standalone. You can try this example code to run on RunKit to test the plugin yourself:
 
 ```js   
 const babel = require("@babel/standalone");
@@ -69,11 +69,12 @@ function MyComponent() {
 `;
 
 const transformedCode = babel.transform(code, {
+  presets: ["react"],
   plugins: [recursionProtectPlugin]
 }).code;
 ```
 
-this will transform the code to:
+this will transform the `code` to:
 
 ```js
 function MyComponent() {
